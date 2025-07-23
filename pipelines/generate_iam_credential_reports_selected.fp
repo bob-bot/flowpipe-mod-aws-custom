@@ -17,12 +17,15 @@ pipeline "generate_iam_credential_reports_selected" {
     }
   }
 
-  # Fixed output - use the correct attribute structure
-  output "results" {
+output "results" {
     description = "Map of IAM credential report status objects per connection"
     value = {
       for key, result in step.pipeline.generate_iam_credential_report :
-      key => result.output.status
+      key => {
+        success       = !is_error(result)
+        status        = is_error(result) ? null : try(result.output.status, null)
+        error_message = is_error(result) ? error_message(result) : null
+      }
     }
   }
 }
