@@ -12,7 +12,7 @@ pipeline "generate_iam_credential_reports_selected" {
 
     pipeline = aws.pipeline.generate_iam_credential_report
 
-    params = {
+    args = {
       conn = each.value
     }
   }
