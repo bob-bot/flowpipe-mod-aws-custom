@@ -17,8 +17,12 @@ pipeline "generate_iam_credential_reports_selected" {
     }
   }
 
+  # Fixed output - use the correct attribute structure
   output "results" {
-    description = "Results from all connections"
-    value = step.pipeline.generate_iam_credential_report
+    description = "Map of IAM credential report status objects per connection"
+    value = {
+      for key, result in step.pipeline.generate_iam_credential_report :
+      key => result.output.status
+    }
   }
 }
