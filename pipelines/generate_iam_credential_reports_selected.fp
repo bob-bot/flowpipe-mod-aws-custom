@@ -17,15 +17,8 @@ pipeline "generate_iam_credential_reports_selected" {
     }
   }
 
-output "results" {
-    description = "Map of IAM credential report status objects per connection"
-    value = {
-      for key, result in step.pipeline.generate_iam_credential_report :
-      key => {
-        success       = !is_error(result)
-        status        = is_error(result) ? null : try(result.output.status, null)
-        error_message = is_error(result) ? error_message(result) : null
-      }
-    }
+  output "results" {
+    description = "IAM credential report status for each connection"
+    value = step.pipeline.generate_iam_credential_report
   }
 }
